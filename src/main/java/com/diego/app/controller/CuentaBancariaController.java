@@ -26,12 +26,13 @@ public class CuentaBancariaController {
 	@Autowired
 	private ICuentaBancariaService cuentabancariaService;
 	
+	@Autowired
 	private IClienteService clienteService;
 	
 	@RequestMapping(value="/listar", method=RequestMethod.GET)
 	public String listar(Model model) {
 		
-		model.addAttribute("cuentabancarias", cuentabancariaService.findAll());
+		model.addAttribute("cuentasbancarias", cuentabancariaService.findAll());
 		model.addAttribute("titulo", "Listado de Cuentas");
 		
 		return "cuentabancaria/listar";
@@ -47,7 +48,7 @@ public class CuentaBancariaController {
 			return "redirect:/listar";
 		}
 		
-		CuentaBancaria cuentabancaria= new CuentaBancaria();
+		CuentaBancaria cuentabancaria = new CuentaBancaria();
 		cuentabancaria.setCliente(cliente);
 		
 		model.addAttribute("cuentabancaria", cuentabancaria);

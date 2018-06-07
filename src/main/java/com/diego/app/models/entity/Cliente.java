@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -28,6 +29,10 @@ public class Cliente implements Serializable {
 	
 	@NotNull
 	private String apellido;
+	
+	@NotNull
+	@Email
+	private String email;
 	
 	@OneToMany(mappedBy="cliente", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<CuentaBancaria> cuentasbancarias;
@@ -54,6 +59,14 @@ public class Cliente implements Serializable {
 
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public List<CuentaBancaria> getCuentasbancarias() {
