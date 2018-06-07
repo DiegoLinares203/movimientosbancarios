@@ -13,4 +13,6 @@ public interface IMovimientoService {
 	public Movimiento findOne(Long id);
 
 	public void delete(Long id);
+	
+	public String Movimiento(Movimiento movimiento);
 }

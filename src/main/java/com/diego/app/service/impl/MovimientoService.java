@@ -40,4 +40,37 @@ public class MovimientoService implements IMovimientoService {
 		movimientoDAO.deleteById(id);
 	}
 
+	@Override
+	public String Movimiento(Movimiento movimiento) {
+		String mensaje="";
+		Double monto = movimiento.getMonto();
+		Double saldo = movimiento.getCuentabancaria().getSaldo();
+		String clave = movimiento.getClave();
+		
+		if(movimiento.getTipo() == "Deposito"){
+			movimiento.getCuentabancaria().setSaldo(saldo + monto);
+			save(movimiento);
+			mensaje = "Deposito Registrado";
+		}
+		
+		if(movimiento.getTipo() == "Retiro"){
+			if(monto > saldo)
+				mensaje = "La cantidad a retirar es mayor al saldo que actualmente tiene";
+			
+			else {
+				
+				if(clave == movimiento.getCuentabancaria().getClave()) {
+					movimiento.getCuentabancaria().setSaldo(saldo - monto);
+					save(movimiento);
+					mensaje = "Retiro Registrado";
+				}
+					
+				else 
+					//Implementar los 3 intentos
+					mensaje = "Clave Incorrecta";
+			}
+		}
+		
+		return mensaje;
+	}
 }

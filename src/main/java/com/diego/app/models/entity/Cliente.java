@@ -1,6 +1,7 @@
 package com.diego.app.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -36,6 +37,10 @@ public class Cliente implements Serializable {
 	
 	@OneToMany(mappedBy="cliente", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<CuentaBancaria> cuentasbancarias;
+	
+	public Cliente() {
+		cuentasbancarias=new ArrayList<>();
+	}
 
 	public Long getId() {
 		return id;

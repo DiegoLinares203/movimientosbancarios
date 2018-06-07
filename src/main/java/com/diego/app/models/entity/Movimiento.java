@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,12 +34,20 @@ public class Movimiento implements Serializable{
 	private Double monto;
 	
 	@NotNull
+	private String clave;
+	
+	@NotNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fecha;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	private CuentaBancaria cuentabancaria;
+	
+	@PrePersist
+	public void prePersist() {
+	        fecha = new Date();
+	}
 
 	public Long getId() {
 		return id;
@@ -78,5 +87,13 @@ public class Movimiento implements Serializable{
 
 	public void setCuentabancaria(CuentaBancaria cuentabancaria) {
 		this.cuentabancaria = cuentabancaria;
+	}
+
+	public String getClave() {
+		return clave;
+	}
+
+	public void setClave(String clave) {
+		this.clave = clave;
 	}
 }
