@@ -39,7 +39,9 @@
 			    <h4></h4>
 			    <h4></h4>
 			    
-			    <table th:if="${not #lists.isEmpty(cliente.cuentasbancarias)}" class="table table-bordered table-striped my-4">
+			    <div th:if="${cuentabancaria.getBloqueado() == true}" class="alert alert-info my-4" th:text=" 'Su cuenta esta bloqueada. Contactar al Banco'"></div>
+			    
+			    <table th:if="${not #lists.isEmpty(cuentabancaria.movimientos)} && ${cuentabancaria.getBloqueado() != true}" class="table table-bordered table-striped my-4">
 					<thead class="thead-inverse">
 						<tr>
 							<th>ID</th>
@@ -59,7 +61,8 @@
 
 				</table> 
 				
-				<a class="btn btn-primary btn-xs" th:href="@{'/movimiento/form/' + ${cuentabancaria.id}}" th:text="'Ingresar Movimiento'"></a>
+				<a class="btn btn-primary btn-xs" th:href="@{'/movimiento/form/retiro' + ${cuentabancaria.id}}" th:text="'Realizar Retiro'"></a>
+				<a class="btn btn-primary btn-xs" th:href="@{'/movimiento/form/deposito' + ${cuentabancaria.id}}" th:text="'Realizar Deposito'"></a>
 
 			</div>
 		</div>

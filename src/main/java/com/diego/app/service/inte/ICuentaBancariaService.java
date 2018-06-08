@@ -13,5 +13,6 @@ public interface ICuentaBancariaService {
 	public CuentaBancaria findOne(Long id);
 
 	public void delete(Long id);
-
+	
+	public Boolean ExcedioNumMovimientos(CuentaBancaria cuentabancaria);
 }

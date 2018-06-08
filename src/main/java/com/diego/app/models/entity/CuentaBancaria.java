@@ -34,6 +34,10 @@ public class CuentaBancaria implements Serializable {
 	@NotNull
 	private String clave;
 	
+	private Integer numintentos;
+	
+	private Boolean bloqueado;
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Cliente cliente;
 	
@@ -42,6 +46,8 @@ public class CuentaBancaria implements Serializable {
 	
 	public CuentaBancaria() {
 		movimientos=new ArrayList<>();
+		bloqueado = false;
+		numintentos = 0;
 	}
 
 	public Long getId() {
@@ -90,5 +96,25 @@ public class CuentaBancaria implements Serializable {
 
 	public void setMovimientos(List<Movimiento> movimientos) {
 		this.movimientos = movimientos;
+	}
+
+	public Boolean getBloqueado() {
+		return bloqueado;
+	}
+
+	public void setBloqueado(Boolean bloqueado) {
+		this.bloqueado = bloqueado;
+	}
+
+	public Integer getNumintentos() {
+		return numintentos;
+	}
+
+	public void setNumintentos(Integer numintentos) {
+		this.numintentos = numintentos;
+	}
+	
+	public void AgregarIntentos() {
+		this.numintentos = numintentos + 1;
 	}
 }

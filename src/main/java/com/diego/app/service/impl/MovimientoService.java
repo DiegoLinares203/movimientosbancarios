@@ -45,32 +45,39 @@ public class MovimientoService implements IMovimientoService {
 		String mensaje="";
 		Double monto = movimiento.getMonto();
 		Double saldo = movimiento.getCuentabancaria().getSaldo();
-		String clave = movimiento.getClave();
 		
-		if(movimiento.getTipo() == "Deposito"){
-			movimiento.getCuentabancaria().setSaldo(saldo + monto);
+		if(movimiento.getTipo() == "Deposito") {
 			save(movimiento);
+			movimiento.getCuentabancaria().setSaldo(saldo + monto);
 			mensaje = "Deposito Registrado";
 		}
 		
-		if(movimiento.getTipo() == "Retiro"){
+		if(movimiento.getTipo() == "Retiro") {
 			if(monto > saldo)
 				mensaje = "La cantidad a retirar es mayor al saldo que actualmente tiene";
 			
 			else {
-				
-				if(clave == movimiento.getCuentabancaria().getClave()) {
-					movimiento.getCuentabancaria().setSaldo(saldo - monto);
 					save(movimiento);
+					movimiento.getCuentabancaria().setSaldo(saldo - monto);
 					mensaje = "Retiro Registrado";
 				}
-					
-				else 
-					//Implementar los 3 intentos
-					mensaje = "Clave Incorrecta";
-			}
 		}
 		
 		return mensaje;
+	}
+
+	@Override
+	public Boolean verificarContraseña(Movimiento movimiento) {
+		Boolean flag = true;
+		
+		if(movimiento.getClave() == movimiento.getCuentabancaria().getClave()){
+			flag = false;
+			movimiento.getCuentabancaria().AgregarIntentos();
+			
+			if(movimiento.getCuentabancaria().getNumintentos() == 3)
+				movimiento.getCuentabancaria().setBloqueado(true);
+		}
+		
+		return flag;
 	}
 }

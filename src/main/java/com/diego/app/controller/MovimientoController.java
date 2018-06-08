@@ -38,22 +38,53 @@ public class MovimientoController {
 		return "movimiento/listar";
 	}
 	
-	@RequestMapping(value="/form/{cuentabancariaid}", method=RequestMethod.GET)
-	public String crear(@PathVariable(value="cuentabancariaid") Long id, Model model, RedirectAttributes flash) {
+	@RequestMapping(value="/form/deposito/{cuentabancariaid}", method=RequestMethod.GET)
+	public String crearDeposito(@PathVariable(value="cuentabancariaid") Long id, Model model, RedirectAttributes flash) {
 		
 		CuentaBancaria cuentabancaria = cuentabancariaService.findOne(id);
 		
+		if(cuentabancariaService.ExcedioNumMovimientos(cuentabancaria) == true) {
+			flash.addFlashAttribute("error", "No es posible realizar más de 3 movimientos por dia");
+			return "redirect:/cuentabancaria/listar";
+		}
+			
 		if(cuentabancaria==null) {
 			flash.addFlashAttribute("error", "La Cuenta Bancaria no existe");
 			return "redirect:/cuentabancaria/listar";
 		}
-		
+			
 		Movimiento movimiento = new Movimiento();
 		movimiento.setCuentabancaria(cuentabancaria);
-		
+		movimiento.setTipo("Deposito");
+			
 		model.addAttribute("movimiento", movimiento);
 		model.addAttribute("titulo", "Crear Movimiento");
+			
+		return "movimiento/form";
+	}
+	
+	@RequestMapping(value="/form/retiro/{cuentabancariaid}", method=RequestMethod.GET)
+	public String crearRetiro(@PathVariable(value="cuentabancariaid") Long id, Model model, RedirectAttributes flash) {
 		
+		CuentaBancaria cuentabancaria = cuentabancariaService.findOne(id);
+		
+		if(cuentabancariaService.ExcedioNumMovimientos(cuentabancaria) == true) {
+			flash.addFlashAttribute("error", "No es posible realizar más de 3 movimientos por dia");
+			return "redirect:/cuentabancaria/listar";
+		}
+			
+		if(cuentabancaria==null) {
+			flash.addFlashAttribute("error", "La Cuenta Bancaria no existe");
+			return "redirect:/cuentabancaria/listar";
+		}
+			
+		Movimiento movimiento = new Movimiento();
+		movimiento.setCuentabancaria(cuentabancaria);
+		movimiento.setTipo("Retiro");
+			
+		model.addAttribute("movimiento", movimiento);
+		model.addAttribute("titulo", "Crear Movimiento");
+			
 		return "movimiento/form";
 	}
 	
@@ -81,9 +112,22 @@ public class MovimientoController {
 			return "movimiento/form";
 		}
 		
-		movimientoService.save(movimiento);
+		if(movimientoService.verificarContraseña(movimiento) == false) {
+			
+			if(movimiento.getCuentabancaria().getBloqueado() == true) {
+				flash.addFlashAttribute("error", "Ha superado el numero de intentos de ingreso de contraseña");
+				return "redirect:/cuentabancaria/listar";
+			}
+			
+			flash.addFlashAttribute("error", "La contraseña es incorrecta");
+			model.addAttribute("movimiento", movimiento);
+			model.addAttribute("titulo", "Formulario de Movimiento");
+			return "movimiento/form";
+		}
+		
+		String mensaje = movimientoService.Movimiento(movimiento);
 		status.setComplete();
-		flash.addFlashAttribute("success", "Movimiento Creado Correctamente");
+		flash.addFlashAttribute("success", mensaje);
 		
 		return "redirect:/ver" + movimiento.getCuentabancaria().getId();
 	}

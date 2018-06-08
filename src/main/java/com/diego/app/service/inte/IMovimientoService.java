@@ -12,7 +12,9 @@ public interface IMovimientoService {
 
 	public Movimiento findOne(Long id);
 
-	public void delete(Long id);
+	public void delete(Long id);	
+	
+	public Boolean verificarContraseña(Movimiento movimiento);
 	
 	public String Movimiento(Movimiento movimiento);
 }

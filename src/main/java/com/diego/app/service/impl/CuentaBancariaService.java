@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.diego.app.models.dao.ICuentaBancariaDAO;
 import com.diego.app.models.entity.CuentaBancaria;
+import com.diego.app.models.entity.Movimiento;
 import com.diego.app.service.inte.ICuentaBancariaService;
 
 @Service
@@ -40,4 +41,23 @@ public class CuentaBancariaService implements ICuentaBancariaService {
 		cuentabancariaDAO.deleteById(id);
 	}
 
+	@Override
+	public Boolean ExcedioNumMovimientos(CuentaBancaria cuentabancaria) {
+		Boolean flag = false;
+		List<Movimiento> movimientos = cuentabancaria.getMovimientos();
+		Integer numMovimientos = 0;
+		
+		if(movimientos.size() > 0)
+			numMovimientos = 1;
+		
+		for (int i = movimientos.size(); i > 0; i--) {
+			if(movimientos.get(i).getFecha() == movimientos.get(i-1).getFecha())
+				numMovimientos++;
+		}
+		
+		if(numMovimientos == 3)
+			flag = true;
+		
+		return flag;
+	}
 }
